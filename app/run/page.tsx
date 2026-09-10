@@ -1,14 +1,13 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useStore } from "@/lib/store"
 import { generateEquation, Equation } from "@/lib/math"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { motion, AnimatePresence } from "motion/react"
 import Link from "next/link"
-import { ArrowLeft, Check, X, Timer } from "lucide-react"
+import { ArrowLeft, Check, X, Timer, Delete } from "lucide-react"
 
 export default function Run() {
   const operationsRange = useStore((state) => state.operationsRange)
@@ -23,22 +22,38 @@ export default function Run() {
   const [timeTaken, setTimeTaken] = useState<number>(0)
   const [isCorrect, setIsCorrect] = useState(false)
 
-  const inputRef = useRef<HTMLInputElement>(null)
-
   useEffect(() => {
     // Initialize the run
     setEquation(generateEquation(operationsRange))
     setStartTime(Date.now())
   }, [operationsRange])
 
-  useEffect(() => {
-    if (!finished && inputRef.current) {
-      inputRef.current.focus()
+  const handleInput = (val: string) => {
+    if (val === '-') {
+      if (inputValue.startsWith('-')) {
+        setInputValue(inputValue.slice(1))
+      } else {
+        setInputValue('-' + inputValue)
+      }
+      return
     }
-  }, [finished])
+    
+    if (inputValue === '0' && val !== '0') {
+      setInputValue(val)
+    } else if (inputValue === '-0') {
+      setInputValue('-' + val)
+    } else {
+      if (inputValue.length < 8) {
+        setInputValue(prev => prev + val)
+      }
+    }
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleDelete = () => {
+    setInputValue(prev => prev.slice(0, -1))
+  }
+
+  const handleSubmit = () => {
     if (!equation || finished || inputValue.trim() === "") return
 
     const endTime = Date.now()
@@ -95,20 +110,33 @@ export default function Run() {
                   {equation.expression} = ?
                 </div>
                 
-                <form onSubmit={handleSubmit} className="max-w-xs mx-auto w-full space-y-6">
-                  <Input
-                    ref={inputRef}
-                    type="number"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Result"
-                    className="text-center text-2xl h-16 rounded-2xl bg-white shadow-sm"
-                    autoFocus
-                  />
-                  <Button type="submit" size="lg" className="w-full h-14 rounded-2xl text-lg font-semibold shadow-sm">
+                <div className="max-w-xs mx-auto w-full space-y-6">
+                  <div className="text-center text-3xl font-medium h-16 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center">
+                    {inputValue || <span className="text-muted-foreground opacity-50">Result</span>}
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-3">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                      <Button 
+                        key={num} 
+                        variant="outline" 
+                        className="h-16 text-2xl rounded-2xl bg-white hover:bg-slate-50 border-slate-200"
+                        onClick={() => handleInput(num.toString())}
+                      >
+                        {num}
+                      </Button>
+                    ))}
+                    <Button variant="outline" className="h-16 text-2xl rounded-2xl bg-white hover:bg-slate-50 border-slate-200" onClick={() => handleInput('-')}>-</Button>
+                    <Button variant="outline" className="h-16 text-2xl rounded-2xl bg-white hover:bg-slate-50 border-slate-200" onClick={() => handleInput('0')}>0</Button>
+                    <Button variant="outline" className="h-16 text-2xl rounded-2xl bg-slate-100 hover:bg-slate-200 border-none text-slate-600" onClick={handleDelete}>
+                      <Delete className="w-6 h-6" />
+                    </Button>
+                  </div>
+
+                  <Button onClick={handleSubmit} size="lg" className="w-full h-16 rounded-2xl text-xl font-semibold shadow-sm">
                     Submit
                   </Button>
-                </form>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
