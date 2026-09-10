@@ -3,7 +3,9 @@ export interface Equation {
   answer: number;
 }
 
-export function generateEquation(operationsCount: number): Equation {
+export function generateEquation(operationsRange: [number, number]): Equation {
+  const operationsCount = Math.floor(Math.random() * (operationsRange[1] - operationsRange[0] + 1)) + operationsRange[0];
+
   // random true/false to include a 999 number
   const includeBigNumber = Math.random() > 0.5;
   const bigNumberIndex = includeBigNumber ? Math.floor(Math.random() * (operationsCount + 1)) : -1;

@@ -11,7 +11,7 @@ import Link from "next/link"
 import { ArrowLeft, Check, X, Timer } from "lucide-react"
 
 export default function Run() {
-  const operationsCount = useStore((state) => state.operationsCount)
+  const operationsRange = useStore((state) => state.operationsRange)
   const addRun = useStore((state) => state.addRun)
 
   const [equation, setEquation] = useState<Equation | null>(null)
@@ -27,9 +27,9 @@ export default function Run() {
 
   useEffect(() => {
     // Initialize the run
-    setEquation(generateEquation(operationsCount))
+    setEquation(generateEquation(operationsRange))
     setStartTime(Date.now())
-  }, [operationsCount])
+  }, [operationsRange])
 
   useEffect(() => {
     if (!finished && inputRef.current) {
@@ -138,7 +138,7 @@ export default function Run() {
 
             <div className="w-full space-y-3 mt-4">
               <Button onClick={() => {
-                setEquation(generateEquation(operationsCount))
+                setEquation(generateEquation(operationsRange))
                 setInputValue("")
                 setFinished(false)
                 setStartTime(Date.now())

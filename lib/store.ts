@@ -12,8 +12,8 @@ export interface RunHistory {
 }
 
 interface CalculusState {
-  operationsCount: number
-  setOperationsCount: (count: number) => void
+  operationsRange: [number, number]
+  setOperationsRange: (range: [number, number]) => void
   history: RunHistory[]
   addRun: (run: RunHistory) => void
 }
@@ -21,8 +21,8 @@ interface CalculusState {
 export const useStore = create<CalculusState>()(
   persist(
     (set) => ({
-      operationsCount: 6,
-      setOperationsCount: (count) => set({ operationsCount: count }),
+      operationsRange: [6, 9],
+      setOperationsRange: (range) => set({ operationsRange: range }),
       history: [],
       addRun: (run) => set((state) => ({ history: [...state.history, run] })),
     }),
