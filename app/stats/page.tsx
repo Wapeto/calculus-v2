@@ -22,8 +22,8 @@ function YAxis() {
       {yTicks.map((tick) => (
         <text
           key={`y-${tick}`}
-          x={margin.left - 15}
-          y={yScale(tick) + margin.top}
+          x={-8}
+          y={yScale(tick)}
           textAnchor="end"
           alignmentBaseline="middle"
           fill="currentColor"
@@ -123,7 +123,7 @@ export default function Stats() {
             <LineChart
               data={chartData}
               xDataKey="index"
-              margin={{ top: 20, right: 20, bottom: 20, left: 45 }}
+              margin={{ top: 20, right: 20, bottom: 20, left: 40 }}
               className="w-full h-full"
             >
               <Grid />
