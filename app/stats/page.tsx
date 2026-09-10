@@ -27,8 +27,16 @@ export default function Stats() {
   }, [history])
 
   const totalRuns = history.length
-  const correctRuns = history.filter((r) => r.isCorrect).length
-  const accuracy = totalRuns > 0 ? ((correctRuns / totalRuns) * 100).toFixed(1) : "0.0"
+  const correctHistory = history.filter((r) => r.isCorrect)
+  const accuracy = totalRuns > 0 ? ((correctHistory.length / totalRuns) * 100).toFixed(1) : "0.0"
+
+  const avgTime = correctHistory.length > 0 
+    ? (correctHistory.reduce((acc, r) => acc + r.timeMs, 0) / correctHistory.length / 1000).toFixed(2)
+    : "0.00"
+    
+  const bestTime = correctHistory.length > 0 
+    ? (Math.min(...correctHistory.map(r => r.timeMs)) / 1000).toFixed(2)
+    : "0.00"
 
   return (
     <div className="flex-1 flex flex-col gap-6 py-8">
@@ -58,6 +66,22 @@ export default function Stats() {
             <div className="text-3xl font-bold">{accuracy}%</div>
           </CardContent>
         </Card>
+        <Card className="rounded-2xl shadow-sm border-slate-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Best Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{bestTime}<span className="text-lg font-medium text-muted-foreground ml-1">s</span></div>
+          </CardContent>
+        </Card>
+        <Card className="rounded-2xl shadow-sm border-slate-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Avg Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{avgTime}<span className="text-lg font-medium text-muted-foreground ml-1">s</span></div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card className="rounded-2xl shadow-sm border-slate-200 flex-1 flex flex-col">
@@ -77,7 +101,15 @@ export default function Stats() {
             >
               <Grid />
               <Line dataKey="time" stroke="#0ea5e9" strokeWidth={3} />
-              <ChartTooltip />
+              <ChartTooltip 
+                rows={(point) => [
+                  {
+                    color: "#0ea5e9",
+                    label: "Time",
+                    value: `${Number(point.time).toFixed(2)}s`
+                  }
+                ]}
+              />
             </LineChart>
           ) : (
             <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
