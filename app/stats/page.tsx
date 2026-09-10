@@ -102,13 +102,20 @@ export default function Stats() {
               <Grid />
               <Line dataKey="time" stroke="#0ea5e9" strokeWidth={3} />
               <ChartTooltip 
-                rows={(point) => [
-                  {
-                    color: "#0ea5e9",
-                    label: "Time",
-                    value: `${Number(point.time).toFixed(2)}s`
-                  }
-                ]}
+                showDatePill={false}
+                content={({ point }) => (
+                  <div className="bg-white px-4 py-3 border border-slate-200 rounded-xl shadow-lg flex flex-col gap-2 min-w-[150px]">
+                    <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-2">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Run #{point.index as number}</span>
+                      <span className="text-[10px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md">{point.date as string}</span>
+                    </div>
+                    <div className="flex items-center gap-2 pt-1">
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#0ea5e9]"></div>
+                      <span className="text-sm font-medium text-slate-700">Time</span>
+                      <span className="text-sm font-bold text-slate-900 ml-auto">{Number(point.time).toFixed(2)}s</span>
+                    </div>
+                  </div>
+                )}
               />
             </LineChart>
           ) : (
