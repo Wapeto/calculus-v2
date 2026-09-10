@@ -16,6 +16,7 @@ interface CalculusState {
   setOperationsRange: (range: [number, number]) => void
   history: RunHistory[]
   addRun: (run: RunHistory) => void
+  clearHistory: () => void
 }
 
 export const useStore = create<CalculusState>()(
@@ -25,6 +26,7 @@ export const useStore = create<CalculusState>()(
       setOperationsRange: (range) => set({ operationsRange: range }),
       history: [],
       addRun: (run) => set((state) => ({ history: [...state.history, run] })),
+      clearHistory: () => set({ history: [] }),
     }),
     {
       name: 'calculus-storage',
