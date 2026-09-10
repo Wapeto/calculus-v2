@@ -88,7 +88,10 @@ export default function Run() {
           >
             <Card className="flex-1 flex flex-col justify-center border-none shadow-none bg-transparent">
               <CardContent className="space-y-10 p-0 text-center">
-                <div className="text-3xl sm:text-4xl font-bold leading-relaxed tracking-tight text-slate-800 break-words px-4">
+                <div 
+                  className="font-bold tracking-tight text-slate-800 whitespace-nowrap w-full text-center px-1"
+                  style={{ fontSize: `min(2.25rem, calc(140vw / ${equation.expression.length + 4}))` }}
+                >
                   {equation.expression} = ?
                 </div>
                 

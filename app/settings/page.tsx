@@ -40,7 +40,7 @@ export default function Settings() {
             value={operationsRange}
             onValueChange={(vals) => { if (Array.isArray(vals)) setOperationsRange([vals[0], vals[1]]) }}
             min={2}
-            max={20}
+            max={9}
             step={1}
             className="py-4"
           />
