@@ -9,7 +9,49 @@ import { LineChart } from "@/components/charts/line-chart"
 import { Line } from "@/components/charts/line"
 import { Grid } from "@/components/charts/grid"
 import { ChartTooltip } from "@/components/charts/tooltip"
+import { useChartStable } from "@/components/charts/chart-context"
 import { useMemo } from "react"
+
+function YAxis() {
+  const { yScale, xScale, data, xAccessor, innerHeight, margin } = useChartStable()
+  const yTicks = yScale.ticks(5)
+  const xTicks = data.filter((_, i) => i === 0 || i === Math.floor(data.length / 2) || i === data.length - 1)
+
+  return (
+    <g className="chart-axes">
+      {/* Y-Axis */}
+      {yTicks.map((tick) => (
+        <text
+          key={`y-${tick}`}
+          x={margin.left - 5}
+          y={yScale(tick) + margin.top}
+          textAnchor="end"
+          alignmentBaseline="middle"
+          fill="currentColor"
+          className="text-[10px] text-slate-400 font-medium"
+        >
+          {tick}s
+        </text>
+      ))}
+      
+      {/* X-Axis */}
+      {xTicks.map((d, i) => (
+        <text
+          key={`x-${i}`}
+          x={xScale(xAccessor(d)) + margin.left}
+          y={innerHeight + margin.top + 15}
+          textAnchor="middle"
+          fill="currentColor"
+          className="text-[10px] text-slate-400 font-medium"
+        >
+          #{d.index as number}
+        </text>
+      ))}
+    </g>
+  )
+}
+YAxis.displayName = "YAxis"
+
 
 export default function Stats() {
   const history = useStore((state) => state.history)
@@ -96,10 +138,11 @@ export default function Stats() {
             <LineChart
               data={chartData}
               xDataKey="index"
-              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+              margin={{ top: 20, right: 20, bottom: 30, left: 35 }}
               className="w-full h-full"
             >
               <Grid />
+              <YAxis />
               <Line dataKey="time" stroke="#0ea5e9" strokeWidth={3} />
               <ChartTooltip 
                 showDatePill={false}
