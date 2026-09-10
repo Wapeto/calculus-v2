@@ -156,9 +156,13 @@ export default function Run() {
                 {isCorrect ? "Correct!" : "Incorrect"}
               </h2>
               {!isCorrect && (
-                <p className="text-muted-foreground text-lg">
-                  The correct answer was {equation.answer}
-                </p>
+                <div className="flex flex-col items-center gap-1 mt-2 text-muted-foreground text-lg">
+                  <p>Your answer: <span className="font-medium text-slate-800">{inputValue || "None"}</span></p>
+                  <p>Correct answer: <span className="font-medium text-slate-800">{equation.answer}</span></p>
+                  <p className="text-sm mt-1 bg-red-50 text-red-600 px-3 py-1 rounded-full font-medium">
+                    Off by {Math.abs(equation.answer - (parseInt(inputValue, 10) || 0))}
+                  </p>
+                </div>
               )}
             </div>
 
