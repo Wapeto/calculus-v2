@@ -90,7 +90,7 @@ export default function Run() {
               <CardContent className="space-y-10 p-0 text-center">
                 <div 
                   className="font-bold tracking-tight text-slate-800 whitespace-nowrap w-full text-center px-1"
-                  style={{ fontSize: `min(2.25rem, calc(140vw / ${equation.expression.length + 4}))` }}
+                  style={{ fontSize: `min(3rem, calc(190vw / ${equation.expression.length + 4}))` }}
                 >
                   {equation.expression} = ?
                 </div>
