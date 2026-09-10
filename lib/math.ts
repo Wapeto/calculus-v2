@@ -17,8 +17,8 @@ export function generateEquation(operationsRange: [number, number]): Equation {
     // Determine the magnitude of the number
     const maxVal = i === bigNumberIndex ? 999 : 99;
     
-    // Generate a number between 0 and maxVal
-    const absVal = Math.floor(Math.random() * (maxVal + 1));
+    // Generate a number between 1 and maxVal
+    const absVal = Math.floor(Math.random() * maxVal) + 1;
     
     // Determine operation (add or subtract)
     const isAdd = Math.random() > 0.5;
