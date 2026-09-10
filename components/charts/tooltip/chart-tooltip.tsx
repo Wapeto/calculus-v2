@@ -25,6 +25,10 @@ import { TooltipIndicator } from "./tooltip-indicator";
 export interface ChartTooltipProps {
   /** Whether to show the date pill at bottom. Default: true */
   showDatePill?: boolean;
+  /** Custom formatter for the tooltip title. */
+  titleFormatter?: (point: Record<string, unknown>) => string;
+  /** Custom formatter for the pill label (overrides default dateLabels). */
+  pillLabelFormatter?: (index: number) => string;
   /** Whether to show the vertical crosshair line. Default: true */
   showCrosshair?: boolean;
   /** Whether to show dots on the lines. Default: true */
@@ -97,6 +101,8 @@ interface ChartTooltipInnerProps extends ChartTooltipProps {
 
 const ChartTooltipInner = memo(function ChartTooltipInner({
   showDatePill = true,
+  titleFormatter,
+  pillLabelFormatter,
   showCrosshair = true,
   showDots = true,
   dotVariant = "dot",
@@ -244,13 +250,16 @@ const ChartTooltipInner = memo(function ChartTooltipInner({
     if (!tooltipData) {
       return undefined;
     }
+    if (titleFormatter) {
+      return titleFormatter(tooltipData.point);
+    }
     // For bar charts (horizontal or vertical), use the category name
     if (barXAccessor) {
       return barXAccessor(tooltipData.point);
     }
     // For line/area charts, use the date
     return weekdayDateFmt.format(xAccessor(tooltipData.point));
-  }, [tooltipData, barXAccessor, xAccessor]);
+  }, [tooltipData, barXAccessor, xAccessor, titleFormatter]);
 
   const tooltipContent = (
     <>
@@ -345,7 +354,7 @@ const ChartTooltipInner = memo(function ChartTooltipInner({
         currentIndex={tooltipData?.index ?? 0}
         discreteInteraction={discreteInteraction}
         enabled={showDatePill && !isHorizontal}
-        labels={dateLabels}
+        labels={pillLabelFormatter ? dateLabels.map((_, i) => pillLabelFormatter(i)) : dateLabels}
         springConfig={springConfig}
         visible={visible}
         xWithMargin={xWithMargin}
