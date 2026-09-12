@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useStore } from "@/lib/store"
 import { generateEquation, Equation } from "@/lib/math"
 import { Button } from "@/components/ui/button"
@@ -21,6 +21,41 @@ export default function Run() {
   // Results
   const [timeTaken, setTimeTaken] = useState<number>(0)
   const [isCorrect, setIsCorrect] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [fontSize, setFontSize] = useState<number | null>(null)
+
+  const updateFontSize = useCallback(() => {
+    if (!containerRef.current || !equation) return
+    const containerWidth = containerRef.current.clientWidth
+    if (!containerWidth) return
+
+    const canvas = document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    const text = `${equation.expression} = ?`
+    ctx.font = "bold 100px var(--font-geist-sans), system-ui, -apple-system, sans-serif"
+    const textWidthAt100 = ctx.measureText(text).width
+    if (!textWidthAt100) return
+
+    // Target 96% of container width to fill the space cleanly without overflowing
+    const targetWidth = containerWidth * 0.96
+    const calculatedSize = (targetWidth / textWidthAt100) * 100
+    
+    // Max 44px (2.75rem), min 16px
+    const finalSize = Math.max(16, Math.min(calculatedSize, 44))
+    setFontSize(Number(finalSize.toFixed(1)))
+  }, [equation])
+
+  useEffect(() => {
+    updateFontSize()
+    window.addEventListener("resize", updateFontSize)
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(updateFontSize)
+    }
+    return () => window.removeEventListener("resize", updateFontSize)
+  }, [updateFontSize])
 
   useEffect(() => {
     // Initialize the run
@@ -102,10 +137,14 @@ export default function Run() {
             className="flex-1 flex flex-col justify-between min-h-0"
           >
             {/* Equation area: flexible and vertically centered in remaining upper space */}
-            <div className="flex-1 flex items-center justify-center min-h-[3rem] py-1 text-center">
+            <div ref={containerRef} className="flex-1 flex items-center justify-center min-h-[3rem] py-1 text-center w-full overflow-hidden">
               <div 
-                className="font-bold tracking-tight text-slate-800 whitespace-nowrap w-full text-center px-1 select-none"
-                style={{ fontSize: `min(2.75rem, calc(190vw / ${equation.expression.length + 4}), 5.5vh)` }}
+                className="font-bold tracking-tight text-slate-800 whitespace-nowrap text-center select-none"
+                style={{ 
+                  fontSize: fontSize 
+                    ? `${fontSize}px` 
+                    : `min(2.75rem, calc(210vw / ${equation.expression.length + 4}))` 
+                }}
               >
                 {equation.expression} = ?
               </div>
