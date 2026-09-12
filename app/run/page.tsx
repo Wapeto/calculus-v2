@@ -80,14 +80,14 @@ export default function Run() {
   if (!equation) return null
 
   return (
-    <div className="flex-1 flex flex-col pt-12 pb-6">
-      <div className="flex items-center mb-8">
+    <div className="flex-1 flex flex-col justify-between min-h-0 h-full max-h-full">
+      <div className="flex items-center mb-1 sm:mb-3 shrink-0">
         <Link href="/">
-          <Button variant="ghost" size="icon" className="rounded-full">
+          <Button variant="ghost" size="icon" className="rounded-full h-9 w-9">
             <ArrowLeft className="w-5 h-5" />
           </Button>
         </Link>
-        <div className="flex-1 text-center font-medium text-sm text-muted-foreground mr-10">
+        <div className="flex-1 text-center font-medium text-sm text-muted-foreground mr-9">
           Mental Training
         </div>
       </div>
@@ -96,92 +96,92 @@ export default function Run() {
         {!finished ? (
           <motion.div
             key="running"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="flex-1 flex flex-col"
+            exit={{ opacity: 0, y: -15 }}
+            className="flex-1 flex flex-col justify-between min-h-0"
           >
-            <Card className="flex-1 flex flex-col justify-center border-none shadow-none bg-transparent">
-              <CardContent className="space-y-10 p-0 text-center">
-                <div 
-                  className="font-bold tracking-tight text-slate-800 whitespace-nowrap w-full text-center px-1"
-                  style={{ fontSize: `min(3rem, calc(190vw / ${equation.expression.length + 4}))` }}
-                >
-                  {equation.expression} = ?
-                </div>
-                
-                <div className="max-w-xs mx-auto w-full space-y-6">
-                  <div className="text-center text-3xl font-medium h-16 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center">
-                    {inputValue || <span className="text-muted-foreground opacity-50">Result</span>}
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-3">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                      <Button 
-                        key={num} 
-                        variant="outline" 
-                        className="h-16 text-2xl rounded-2xl bg-white hover:bg-slate-50 border-slate-200"
-                        onClick={() => handleInput(num.toString())}
-                      >
-                        {num}
-                      </Button>
-                    ))}
-                    <Button variant="outline" className="h-16 text-2xl rounded-2xl bg-white hover:bg-slate-50 border-slate-200" onClick={() => handleInput('-')}>-</Button>
-                    <Button variant="outline" className="h-16 text-2xl rounded-2xl bg-white hover:bg-slate-50 border-slate-200" onClick={() => handleInput('0')}>0</Button>
-                    <Button variant="outline" className="h-16 text-2xl rounded-2xl bg-slate-100 hover:bg-slate-200 border-none text-slate-600" onClick={handleDelete}>
-                      <Delete className="w-6 h-6" />
-                    </Button>
-                  </div>
-
-                  <Button onClick={handleSubmit} size="lg" className="w-full h-16 rounded-2xl text-xl font-semibold shadow-sm">
-                    Submit
+            {/* Equation area: flexible and vertically centered in remaining upper space */}
+            <div className="flex-1 flex items-center justify-center min-h-[3rem] py-1 text-center">
+              <div 
+                className="font-bold tracking-tight text-slate-800 whitespace-nowrap w-full text-center px-1 select-none"
+                style={{ fontSize: `min(2.75rem, calc(190vw / ${equation.expression.length + 4}), 5.5vh)` }}
+              >
+                {equation.expression} = ?
+              </div>
+            </div>
+            
+            {/* Keypad & Input controls: compact, ergonomic, always visible without scrolling */}
+            <div className="max-w-xs mx-auto w-full flex flex-col gap-2 sm:gap-2.5 pb-1">
+              <div className="text-center text-2xl sm:text-3xl font-medium h-11 sm:h-13 md:h-14 rounded-xl sm:rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center shrink-0">
+                {inputValue || <span className="text-muted-foreground opacity-40">Result</span>}
+              </div>
+              
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 shrink-0">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <Button 
+                    key={num} 
+                    variant="outline" 
+                    className="h-11 sm:h-13 md:h-14 text-xl sm:text-2xl rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 border-slate-200 active:scale-95 transition-transform touch-manipulation select-none"
+                    onClick={() => handleInput(num.toString())}
+                  >
+                    {num}
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
+                ))}
+                <Button variant="outline" className="h-11 sm:h-13 md:h-14 text-xl sm:text-2xl rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 border-slate-200 active:scale-95 transition-transform touch-manipulation select-none" onClick={() => handleInput('-')}>-</Button>
+                <Button variant="outline" className="h-11 sm:h-13 md:h-14 text-xl sm:text-2xl rounded-xl sm:rounded-2xl bg-white hover:bg-slate-50 border-slate-200 active:scale-95 transition-transform touch-manipulation select-none" onClick={() => handleInput('0')}>0</Button>
+                <Button variant="outline" className="h-11 sm:h-13 md:h-14 text-xl sm:text-2xl rounded-xl sm:rounded-2xl bg-slate-100 hover:bg-slate-200 border-none text-slate-600 active:scale-95 transition-transform touch-manipulation select-none" onClick={handleDelete}>
+                  <Delete className="w-5 h-5 sm:w-6 sm:h-6" />
+                </Button>
+              </div>
+
+              <Button onClick={handleSubmit} size="lg" className="w-full h-11 sm:h-13 md:h-14 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-semibold shadow-sm shrink-0 touch-manipulation">
+                Submit
+              </Button>
+            </div>
           </motion.div>
         ) : (
           <motion.div
             key="finished"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex-1 flex flex-col items-center justify-center gap-8"
+            className="flex-1 flex flex-col items-center justify-center gap-4 sm:gap-6 py-2 my-auto"
           >
-            <div className={`p-6 rounded-full ${isCorrect ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-              {isCorrect ? <Check className="w-16 h-16" /> : <X className="w-16 h-16" />}
+            <div className={`p-4 sm:p-5 rounded-full ${isCorrect ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+              {isCorrect ? <Check className="w-12 h-12 sm:w-16 sm:h-16" /> : <X className="w-12 h-12 sm:w-16 sm:h-16" />}
             </div>
             
-            <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold">
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-bold">
                 {isCorrect ? "Correct!" : "Incorrect"}
               </h2>
               {!isCorrect && (
-                <div className="flex flex-col items-center gap-1 mt-2 text-muted-foreground text-lg">
+                <div className="flex flex-col items-center gap-1 mt-1 sm:mt-2 text-muted-foreground text-base sm:text-lg">
                   <p>Your answer: <span className="font-medium text-slate-800">{inputValue || "None"}</span></p>
                   <p>Correct answer: <span className="font-medium text-slate-800">{equation.answer}</span></p>
-                  <p className="text-sm mt-1 bg-red-50 text-red-600 px-3 py-1 rounded-full font-medium">
+                  <p className="text-xs sm:text-sm mt-1 bg-red-50 text-red-600 px-3 py-1 rounded-full font-medium">
                     Off by {Math.abs(equation.answer - (parseInt(inputValue, 10) || 0))}
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-3 text-lg font-medium bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
-              <Timer className="w-5 h-5 text-muted-foreground" />
+            <div className="flex items-center gap-2 sm:gap-3 text-base sm:text-lg font-medium bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-slate-100">
+              <Timer className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
               {(timeTaken / 1000).toFixed(2)} seconds
             </div>
 
-            <div className="w-full space-y-3 mt-4">
+            <div className="w-full max-w-xs space-y-2.5 mt-2 sm:mt-4">
               <Button onClick={() => {
                 setEquation(generateEquation(operationsRange))
                 setInputValue("")
                 setFinished(false)
                 setStartTime(Date.now())
-              }} className="w-full h-14 rounded-2xl text-lg">
+              }} className="w-full h-11 sm:h-13 md:h-14 rounded-xl sm:rounded-2xl text-base sm:text-lg font-semibold">
                 Play Again
               </Button>
               <Link href="/" className="block">
-                <Button variant="outline" className="w-full h-14 rounded-2xl text-lg bg-transparent">
+                <Button variant="outline" className="w-full h-11 sm:h-13 md:h-14 rounded-xl sm:rounded-2xl text-base sm:text-lg bg-transparent">
                   Home
                 </Button>
               </Link>

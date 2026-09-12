@@ -5,7 +5,7 @@ import { Calculator, BarChart3, Settings } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex-1 flex flex-col justify-center gap-8 py-10">
+    <div className="flex-1 flex flex-col justify-center gap-6 sm:gap-8 py-4 sm:py-8 my-auto">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-bold tracking-tight text-primary">Calculus</h1>
         <p className="text-muted-foreground text-lg">Mental math training.</p>
