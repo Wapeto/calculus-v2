@@ -30,17 +30,24 @@ export default function Run() {
     const containerWidth = containerRef.current.clientWidth
     if (!containerWidth) return
 
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    // Measure exact width using a hidden DOM element to correctly parse CSS variables
+    const span = document.createElement("span")
+    span.style.visibility = "hidden"
+    span.style.position = "absolute"
+    span.style.whiteSpace = "nowrap"
+    span.style.fontFamily = "var(--font-geist-sans), system-ui, sans-serif"
+    span.style.fontWeight = "bold"
+    span.style.fontSize = "100px"
+    span.innerText = `${equation.expression} = ?`
+    document.body.appendChild(span)
+    
+    const textWidthAt100 = span.getBoundingClientRect().width
+    document.body.removeChild(span)
 
-    const text = `${equation.expression} = ?`
-    ctx.font = "bold 100px var(--font-geist-sans), system-ui, -apple-system, sans-serif"
-    const textWidthAt100 = ctx.measureText(text).width
     if (!textWidthAt100) return
 
-    // Target 96% of container width to fill the space cleanly without overflowing
-    const targetWidth = containerWidth * 0.96
+    // Target 95% of container width to fill the space cleanly without overflowing
+    const targetWidth = containerWidth * 0.95
     const calculatedSize = (targetWidth / textWidthAt100) * 100
     
     // Max 44px (2.75rem), min 16px
@@ -143,7 +150,7 @@ export default function Run() {
                 style={{ 
                   fontSize: fontSize 
                     ? `${fontSize}px` 
-                    : `min(2.75rem, calc(210vw / ${equation.expression.length + 4}))` 
+                    : `min(2.75rem, calc(190vw / ${equation.expression.length + 4}))` 
                 }}
               >
                 {equation.expression} = ?
